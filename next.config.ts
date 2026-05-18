@@ -1,17 +1,13 @@
 import type { NextConfig } from 'next';
-import million from 'million/compiler';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { i18n } = require('./next-i18next.config.js');
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   i18n,
   compress: true,
   reactStrictMode: false,
   distDir: '.next',
-  eslint: {
-    ignoreDuringBuilds: true
-  },
   typescript: {
     ignoreBuildErrors: true
   },
@@ -34,49 +30,17 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.unsplash.com',
         pathname: '**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+        pathname: '**'
       }
-    ],
-    domains: ['localhost', 'images.unsplash.com']
+    ]
   },
   poweredByHeader: false,
-  serverRuntimeConfig: {
-    API_ENDPOINT: process.env.API_SERVER_ENDPOINT || process.env.API_ENDPOINT
-  },
-  publicRuntimeConfig: {
-    SITE_URL: process.env.SITE_URL,
-    API_ENDPOINT: process.env.API_ENDPOINT || 'http://localhost:5001',
-    MAX_SIZE_IMAGE: process.env.MAX_SIZE_IMAGE || 1000,
-    MAX_SIZE_FILE: process.env.MAX_SIZE_FILE || 1000,
-    MAX_SIZE_VIDEO: process.env.MAX_SIZE_VIDEO || 5000,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXT_PUBLIC_SOCKET_ENDPOINT: process.env.NEXT_PUBLIC_SOCKET_ENDPOINT
-  },
-  webpack(config, { buildId, webpack }) {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env': {
-          BUILD_ID: JSON.stringify(buildId)
-        }
-      })
-    );
-
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      path: false,
-      os: false
-    };
-
-    // Add @/ alias pointing to src/
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': require('path').resolve(__dirname, 'src')
-    };
-
-    return config;
-  },
+  turbopack: {},
   transpilePackages: []
 };
 
-export default million.next(nextConfig as NextConfig);
+export default nextConfig;
